@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateTeamRequest extends FormRequest
+class RegistrationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return $this->user()->can("update-team", $this->route("team"));
+        return true;
     }
 
     /**
@@ -22,9 +22,10 @@ class UpdateTeamRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => ["required", "string", "min:3", "max:50", "unique:teams"],
-            "race_id" => ["required", "integer", "exists:races,id"],
-            "country" => ["required", "string", "min:3", "max:50"]
+            "name" => ["required", "string", "max:255"],
+            "email" => ["required", "email:rfc", "unique:users", "max:255"],
+            "password" => ["required", "string", "min:8", "max:255", "confirmed"],
+            "role" => ["string", "in:guest,admin"],
         ];
     }
 }

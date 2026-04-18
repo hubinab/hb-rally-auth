@@ -15,10 +15,20 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        User::factory()->create([
+            'name' => 'Bob a mester',
+            'email' => 'bob@example.com',
+            'password' => 'bob12345',
+        ]);
+
+        User::factory()->create([
+            'name' => 'admin',
+            'email' => 'admin@example.com',
+            'password' => 'admin123',
+            'role' => 'admin',
+        ]);
+
+
         $this->call(RacesSeeder::class);
         $this->call(TeamsSeeder::class);
     }

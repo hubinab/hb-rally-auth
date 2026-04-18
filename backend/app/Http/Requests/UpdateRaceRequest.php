@@ -12,7 +12,7 @@ class UpdateRaceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user()->can("update-race", $this->route("race"));
     }
 
     /**

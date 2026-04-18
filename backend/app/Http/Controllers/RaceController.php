@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRaceRequest;
 use App\Http\Resources\RaceResource;
 use App\Models\Race;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class RaceController extends Controller
 {
@@ -51,6 +52,7 @@ class RaceController extends Controller
      */
     public function destroy(Race $race)
     {
+        Gate::authorize("delete-race", $race);
         return $race->delete() ? response()->noContent() : abort(500);
     }
 }
