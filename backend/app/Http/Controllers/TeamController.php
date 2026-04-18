@@ -15,16 +15,17 @@ class TeamController extends Controller
      */
     public function index(): JsonResource
     {
-        $data = Team::with('race')->get();
-        return TeamResource::collection($data);
+        return TeamResource::collection(Team::with('race')->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreTeamRequest $request)
+    public function store(StoreTeamRequest $request): JsonResource
     {
-        //
+        $data = $request->validated();
+        $team = Team::create($data);
+        return new TeamResource($team->load('race'));
     }
 
     /**
@@ -32,16 +33,17 @@ class TeamController extends Controller
      */
     public function show(Team $team): JsonResource
     {
-        $team->load('race');
-        return new TeamResource($team);
+        return new TeamResource($team->load('race'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTeamRequest $request, Team $team)
+    public function update(UpdateTeamRequest $request, Team $team): JsonResource
     {
-        //
+        $data = $request->validated();
+        $team->update($data);
+        return new TeamResource($team->load('race'));
     }
 
     /**
@@ -49,6 +51,6 @@ class TeamController extends Controller
      */
     public function destroy(Team $team)
     {
-        //
+        return $team->delete() ? response()->noContent() : abort(500);
     }
 }

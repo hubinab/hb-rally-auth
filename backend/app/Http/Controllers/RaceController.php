@@ -6,7 +6,6 @@ use App\Http\Requests\StoreRaceRequest;
 use App\Http\Requests\UpdateRaceRequest;
 use App\Http\Resources\RaceResource;
 use App\Models\Race;
-use App\Models\Team;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class RaceController extends Controller
@@ -16,16 +15,17 @@ class RaceController extends Controller
      */
     public function index(): JsonResource
     {
-        $data = Race::with("teams")->get();
-        return RaceResource::collection($data);
+        return RaceResource::collection(Race::with("teams")->get());
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRaceRequest $request)
+    public function store(StoreRaceRequest $request): JsonResource
     {
-        //
+        $data = $request->validated();
+        $race = Race::create($data);
+        return new RaceResource($race->load('teams'));
     }
 
     /**
@@ -33,16 +33,17 @@ class RaceController extends Controller
      */
     public function show(Race $race): JsonResource
     {
-        $race->load("teams");
-        return new RaceResource($race);
+        return new RaceResource($race->load("teams"));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRaceRequest $request, Race $race)
+    public function update(UpdateRaceRequest $request, Race $race): JsonResource
     {
-        //
+        $data = $request->validated();
+        $race->update($data);
+        return new RaceResource($race->load('teams'));
     }
 
     /**
@@ -50,6 +51,6 @@ class RaceController extends Controller
      */
     public function destroy(Race $race)
     {
-        //
+        return $race->delete() ? response()->noContent() : abort(500);
     }
 }
