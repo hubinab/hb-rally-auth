@@ -7,15 +7,25 @@ export const useTeamStore = defineStore('teams', () => {
     const errorMessage = ref(null)
 
     async function getTeams() {
+
+        errorMessage.value = null
         // ezt a try-catch-et is a copilot adta:
         try {
             const response = await api.get("/teams")
             Object.assign(teams, response.data.data)
         } catch (error) {
-            if (error.response?.status === 401) {
-                errorMessage.value = "Nincs jogosultsága az oldalhoz!"
-            } else {
-                errorMessage.value = "Ismeretlen hiba történt"
+            switch (error.response?.status) {
+                case 401:
+                    errorMessage.value = "Nincs bejelentkezve!"
+                    break;
+
+                case 403:
+                    errorMessage.value = "Nincs jogosultsága az oldal megtekintéséhez!"
+                    break;
+
+                default:
+                    errorMessage.value = "Ismeretlen hiba történt"
+                    break;
             }
         }
     }
@@ -24,6 +34,6 @@ export const useTeamStore = defineStore('teams', () => {
         errorMessage,
         teams,
         getTeams,
-        
+
     }
 })
