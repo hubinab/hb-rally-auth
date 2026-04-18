@@ -33,6 +33,12 @@ class AppServiceProvider extends ServiceProvider
         Gate::define("delete-race", function (User $user){
             return $user->role === "admin";
         });
+        
+        // A frontend teszt miatt az index-re is teszek
+        // jogosultsag ellenorzest
+        Gate::define("get-teams", function (User $user){
+            return $user->role === "admin";
+        });
 
         Gate::define("create-team", function (User $user){
             return $user->role === "admin";

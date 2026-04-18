@@ -22,9 +22,10 @@ Route::apiResource('/races', RaceController::class)
     ->only(["index", "show"])
 ;
 
+// A frontend teszt miatt az index-et atteszem alulra
 Route::apiResource('/teams', TeamController::class)
     ->whereNumber("team")
-    ->only(["index", "show", "destroy"])
+    ->only(["show", "destroy"])
 ;
 
 Route::middleware(["auth:sanctum"])->group(function () {
@@ -37,8 +38,9 @@ Route::middleware(["auth:sanctum"])->group(function () {
         ->only(["store", "update", "destroy"])
     ;
 
+    // A frontend teszt miatt az index-et ide tettem
     Route::apiResource('/teams', TeamController::class)
         ->whereNumber("team")
-        ->only(["store", "update"])
+        ->only(["index", "store", "update"])
     ;
 });

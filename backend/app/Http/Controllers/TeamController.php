@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateTeamRequest;
 use App\Http\Resources\TeamResource;
 use App\Models\Team;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Gate;
 
 class TeamController extends Controller
 {
@@ -15,6 +16,9 @@ class TeamController extends Controller
      */
     public function index(): JsonResource
     {
+        // A frontend teszt miatt az index-re is teszek
+        // jogosultsag ellenorzest
+        Gate::authorize("get-teams");
         return TeamResource::collection(Team::with('race')->get());
     }
 
